@@ -7,17 +7,22 @@ public class King extends ChessPiece {
 
 
     @Override
-    public void Move(Pair<Integer, Integer> i) {
+    public Pair<Integer, Integer> getIndex() {
+        return null;
+    }
+
+    @Override
+    public void setIndex(Pair<Integer, Integer> i) {
 
     }
 
     @Override
-    public void Hit(ChessPiece chessPiece) {
-
+    public Color getColor() {
+        return null;
     }
 
     @Override
-    public void Change(int i, ChessPiece chessPiece) {
+    public void Hit(Pair<Integer, Integer> value) {
 
     }
 }

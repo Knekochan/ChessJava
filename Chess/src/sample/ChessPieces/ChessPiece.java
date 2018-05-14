@@ -1,12 +1,21 @@
 package sample.ChessPieces;
 
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.util.Pair;
 
 public abstract class ChessPiece {
     protected MoveStrategy moveStrategy;
 
-    protected ChessPiece(MoveStrategy moveStrategy) {
-        this.moveStrategy = moveStrategy;
+    private Image image;
+
+    protected ChessPiece(String path) {
+        this.image = new Image(path);
+    }
+
+    public void draw(GraphicsContext gc) {
+        // a 0-ák helyére a bábu pozíciója kerül
+        gc.drawImage(this.image, 0, 0);
     }
 
     //az index jelz, hogy hol vannak éppen a bábuk a pályán
@@ -16,9 +25,11 @@ public abstract class ChessPiece {
     //fekete vagy fehér
     public abstract Color getColor();
     //a move-ban lesz megvalósítva egy lépési stratégia
-    public void Move(Pair<Integer,Integer> value, Direction direction) {
-        this.moveStrategy.Move(value, direction);
+    public boolean CanMoveTo(Pair<Integer,Integer> value) {
+        return this.moveStrategy.CanMoveTo(value);
+
+
     }
     public abstract void Hit(Pair<Integer,Integer> value);
-    public abstract void Change(int value);
+    public void Change(ChessPiece value) {};
 }

@@ -1,75 +1,109 @@
 package sample;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.util.Pair;
-import sample.ChessPieces.Color;
+import sample.ChessPieces.*;
 
-import java.util.List;
+import java.util.*;
 
 //tábla
-public final class ChessBoard {
-    private static int[][] board;
-    private static List<Integer> deadWhitePiece;
-    private static List<Integer> deadBlackPiece;
+public class ChessBoard {
+    private static ChessBoard chessBoard = null;
 
-    public static void generateBoard() {
-        board = new int[8][8];
+    private ChessPiece[][] board;
+    private ArrayList<ChessPiece> deadWhitePiece;
+    private ArrayList<ChessPiece> deadBlackPiece;
+
+    private ChessBoard() {
+        this.board = new ChessPiece[8][8];
+        this.deadWhitePiece = new ArrayList<ChessPiece>();
+        this.deadBlackPiece = new ArrayList<ChessPiece>();
+
         //tábla egyik oldala
-        board[0][0] = 2; //bástya
-        board[0][1] = 3; //huszár
-        board[0][2] = 4; //futó
-        board[0][3] = 5; //királynő
-        board[0][4] = 6; //király
-        board[0][5] = 4; //futó
-        board[0][6] = 3; //huszár
-        board[0][7] = 2; //bástya
+        this.board[0][0] = new Rook(); //bástya
+        this.board[0][1] = new Knight(); //huszár
+        this.board[0][2] = new Bishop(); //futó
+        this.board[0][3] = new Queen(); //királynő
+        this.board[0][4] = new King(); //király
+        this.board[0][5] = new Bishop(); //futó
+        this.board[0][6] = new Knight(); //huszár
+        this.board[0][7] = new Rook(); //bástya
 
         //tábla másik oldala
-        board[7][0] = 2; //bástya
-        board[7][1] = 3; //huszár
-        board[7][2] = 4; //futó
-        board[7][3] = 5; //királynő
-        board[7][4] = 6; //király
-        board[7][5] = 4; //futó
-        board[7][6] = 3; //huszár
-        board[7][7] = 2; //bástya
+        this.board[7][0] = new Rook(); //bástya
+        this.board[7][1] = new Knight(); //huszár
+        this.board[7][2] = new Bishop(); //futó
+        this.board[7][3] = new Queen(); //királynő
+        this.board[7][4] = new King(); //király
+        this.board[7][5] = new Bishop(); //futó
+        this.board[7][6] = new Knight(); //huszár
+        this.board[7][7] = new Rook(); //bástya
 
         //parasztok
         for (int i = 0; i < 8; i++) {
-            board[1][i] = 1;
-            board[6][i] = 1;
+            this.board[1][i] = new Pawn(Color.BLACK);
+            this.board[6][i] = new Pawn(Color.WHITE);
         }
 
         //többi mező
         for (int i = 0; i < 8; i++) {
-            board[2][i] = 0;
-            board[3][i] = 0;
-            board[4][i] = 0;
-            board[5][i] = 0;
+            this.board[2][i] = null;
+            this.board[3][i] = null;
+            this.board[4][i] = null;
+            this.board[5][i] = null;
         }
     }
 
-    public static int[][] getBoard() {
-        return board;
+    //Instance = példány
+    public static ChessBoard getInstance()
+    {
+        if (chessBoard == null) {
+            chessBoard = new ChessBoard();
+        }
+        return chessBoard;
     }
 
-    public static List<Integer> getDeadWhitePiece() {
-        return deadWhitePiece;
+    public ChessPiece[][] getBoard() {
+        return this.board;
     }
 
-    public static void setDeadWhitePiece(int value) {
-        deadWhitePiece.add(value);
+    public ArrayList<ChessPiece> getDeadWhitePiece() {
+        return this.deadWhitePiece;
     }
 
-    public static List<Integer> getDeadBlackPiece() {
-        return deadBlackPiece;
+    public void setDeadWhitePiece(ChessPiece value) {
+        this.deadWhitePiece.add(value);
     }
 
-    public static void setDeadBlackPiece(int value) {
-        deadBlackPiece.add(value);
+    public ArrayList<ChessPiece> getDeadBlackPiece() {
+        return this.deadBlackPiece;
+    }
+
+    public void setDeadBlackPiece(ChessPiece value) {
+        this.deadBlackPiece.add(value);
+    }
+
+    //bábuk léptetése
+    public void movePiece(ChessPiece piece, Pair<Integer,Integer> value) {
+        if (piece.CanMoveTo(piece.getIndex())) {
+            Pair<Integer, Integer> help;
+            help = piece.getIndex();
+            piece.setIndex(value);
+            this.changeFieldValue(help, null);
+            this.changeFieldValue(piece.getIndex(), piece);
+        }
+    }
+
+    public void draw(GraphicsContext gc) {
+        for(int i = 0; i < 8; i++) {
+            for(int j = 0; j < 8; j++) {
+                this.board[i][j].draw(gc);
+            }
+        }
     }
 
     //a halott bábuk listájából törli a vissza került bábut
     //akkor használjuk amikor az egyik paraszt a pálya tulsó végére ér és lehetőség van a bábu cserére
-    public static void removeDeadPiece(Color color, int value)
+    public void removeDeadPiece(Color color, ChessPiece value)
     {
         int i = 0;
         if (color == color.WHITE) {
@@ -93,18 +127,19 @@ public final class ChessBoard {
 
     //vissza adja az adott táblahelyen található értéket
     //vagyis megmondja, hogy a tábla adott helyén milyen bábu van
-    public static int getFieldValue(Pair<Integer,Integer> value) {
+    public ChessPiece getFieldValue(Pair<Integer,Integer> value) {
         return board[value.getKey()][value.getValue()];
     }
 
     //bábut cserél
     //a tábla adott helyén lévő értéket átírja
-    public static void changeFieldValue(Pair<Integer,Integer> piece, int i){
+    public void changeFieldValue(Pair<Integer,Integer> piece, ChessPiece i){
         board[piece.getKey()][piece.getValue()] = i;
     }
 
     //ezt egyelőre nem használom
-    public static int findPieceIndex(Pair<Integer,Integer> value) {
+
+    public ChessPiece findPieceIndex(Pair<Integer,Integer> value) {
         for (int i = 0; i < board[0].length; i++) {
             for (int j = 0; j < board[1].length; j++) {
                 if (i == value.getKey() && j == value.getValue()) {
@@ -112,6 +147,7 @@ public final class ChessBoard {
                 }
             }
         }
-        return -1;
+        return null;
     }
+
 }
