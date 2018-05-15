@@ -18,25 +18,25 @@ public class ChessBoard {
         this.deadWhitePiece = new ArrayList<ChessPiece>();
         this.deadBlackPiece = new ArrayList<ChessPiece>();
 
-        //tábla egyik oldala
-        this.board[0][0] = new Rook(); //bástya
-        this.board[0][1] = new Knight(); //huszár
-        this.board[0][2] = new Bishop(); //futó
-        this.board[0][3] = new Queen(); //királynő
-        this.board[0][4] = new King(); //király
-        this.board[0][5] = new Bishop(); //futó
-        this.board[0][6] = new Knight(); //huszár
-        this.board[0][7] = new Rook(); //bástya
+        //fekete
+        this.board[0][0] = new Rook(Color.BLACK); //bástya
+        this.board[0][1] = new Knight(Color.BLACK); //huszár
+        this.board[0][2] = new Bishop(Color.BLACK); //futó
+        this.board[0][3] = new Queen(Color.BLACK); //királynő
+        this.board[0][4] = new King(Color.BLACK); //király
+        this.board[0][5] = new Bishop(Color.BLACK); //futó
+        this.board[0][6] = new Knight(Color.BLACK); //huszár
+        this.board[0][7] = new Rook(Color.BLACK); //bástya
 
-        //tábla másik oldala
-        this.board[7][0] = new Rook(); //bástya
-        this.board[7][1] = new Knight(); //huszár
-        this.board[7][2] = new Bishop(); //futó
-        this.board[7][3] = new Queen(); //királynő
-        this.board[7][4] = new King(); //király
-        this.board[7][5] = new Bishop(); //futó
-        this.board[7][6] = new Knight(); //huszár
-        this.board[7][7] = new Rook(); //bástya
+        //fehér
+        this.board[7][0] = new Rook(Color.WHITE); //bástya
+        this.board[7][1] = new Knight(Color.WHITE); //huszár
+        this.board[7][2] = new Bishop(Color.WHITE); //futó
+        this.board[7][3] = new Queen(Color.WHITE); //királynő
+        this.board[7][4] = new King(Color.WHITE); //király
+        this.board[7][5] = new Bishop(Color.WHITE); //futó
+        this.board[7][6] = new Knight(Color.WHITE); //huszár
+        this.board[7][7] = new Rook(Color.WHITE); //bástya
 
         //parasztok
         for (int i = 0; i < 8; i++) {

@@ -7,7 +7,7 @@ public class Bishop extends ChessPiece{
     //Pair<oszlop,sor>
     private Pair<Integer, Integer> index;
     private Color color;
-    private final int type = 2;
+    private final int type = 4;
 
     public Bishop(Color color) {
         super(color == Color.WHITE ? "fehér_kép" : "fekete_kép");
@@ -22,17 +22,17 @@ public class Bishop extends ChessPiece{
 
     @Override
     public Pair<Integer, Integer> getIndex() {
-        return null;
+        return this.index;
     }
 
     @Override
     public void setIndex(Pair<Integer, Integer> i) {
-
+        this.index = i;
     }
 
     @Override
     public Color getColor() {
-        return null;
+        return this.color;
     }
 
     @Override
