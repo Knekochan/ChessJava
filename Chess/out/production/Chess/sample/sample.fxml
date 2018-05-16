@@ -18,9 +18,9 @@
       <RowConstraints />
    </rowConstraints>
    <children>
-      <Pane>
+      <Pane prefHeight="200.0" prefWidth="200.0">
          <children>
-            <Canvas fx:id="canvas" height="1024" width="768" />
+            <Canvas id="canvas" fx:id="canvas" height="200.0" width="200.0" />
          </children>
       </Pane>
    </children>

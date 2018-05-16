@@ -27,8 +27,6 @@ public abstract class ChessPiece {
     //a move-ban lesz megvalósítva egy lépési stratégia
     public boolean CanMoveTo(Pair<Integer,Integer> value) {
         return this.moveStrategy.CanMoveTo(value);
-
-
     }
     public abstract void Hit(Pair<Integer,Integer> value);
     public void Change(ChessPiece value) {};

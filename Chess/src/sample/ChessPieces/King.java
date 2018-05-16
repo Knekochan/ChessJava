@@ -1,6 +1,7 @@
 package sample.ChessPieces;
 
 import javafx.util.Pair;
+import sample.ChessBoard;
 
 //király
 public class King extends ChessPiece {
@@ -13,9 +14,31 @@ public class King extends ChessPiece {
         super(color == Color.WHITE ? "fehér_kép" : "fekete_kép");
         this.color = color;
         this.moveStrategy = new MoveStrategy() {
+            private boolean kingNextTo(Pair<Integer, Integer> value) {
+                if ((King.this.index.getKey() + 1 == value.getKey() && King.this.index.getValue() == value.getValue()) ||
+                        (King.this.index.getKey() - 1 == value.getKey() && King.this.index.getValue() == value.getValue()) ||
+                        (King.this.index.getValue() + 1 == value.getValue() && King.this.index.getKey() == value.getKey()) ||
+                        (King.this.index.getValue() - 1 == value.getValue() && King.this.index.getKey() == value.getKey()) ||
+                        (King.this.index.getKey() + 1 == value.getKey() && King.this.index.getValue() - 1 == value.getValue()) ||
+                        (King.this.index.getKey() - 1 == value.getKey() && King.this.index.getValue() - 1 == value.getValue()) ||
+                        (King.this.index.getKey() - 1 == value.getKey() && King.this.index.getValue() + 1 == value.getValue()) ||
+                        (King.this.index.getKey() + 1 == value.getKey() && King.this.index.getValue() + 1 == value.getValue())) {
+                    return true;
+                }
+                return false;
+            }
+
             @Override
             public boolean CanMoveTo(Pair<Integer, Integer> value) {
-                return super.CanMoveTo(value);
+                if (ChessBoard.getInstance().getFieldValue(value) != null){
+                    return false;
+                }
+
+                if (this.kingNextTo(value)) {
+                    return true;
+                }
+
+                return false;
             }
         };
     }
