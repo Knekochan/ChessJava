@@ -24,6 +24,7 @@ public abstract class ChessPiece {
     public abstract void setIndex(Pair<Integer,Integer> i);
     //fekete vagy fehér
     public abstract Color getColor();
+    public abstract int getType();
     //a move-ban lesz megvalósítva egy lépési stratégia
     public boolean CanMoveTo(Pair<Integer,Integer> value) {
         return this.moveStrategy.CanMoveTo(value);

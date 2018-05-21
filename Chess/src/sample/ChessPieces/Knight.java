@@ -12,10 +12,11 @@ public class Knight extends ChessPiece {
     private Color color;
     private final int type = 3;
 
-    public Knight(Color color) {
+    public Knight(Color color,Pair<Integer,Integer> index) {
         super(color == Color.WHITE ? new File("C:\\Users\\User\\Documents\\IntelliJ IDEA\\Chess\\src\\sample\\PieceImages\\KnightWhite.png").toURI().toString() :
                 new File("C:\\Users\\User\\Documents\\IntelliJ IDEA\\Chess\\src\\sample\\PieceImages\\KnightBlack.png").toURI().toString());
         this.color = color;
+        this.index = index;
         this.moveStrategy = new MoveStrategy() {
             private boolean knightJump(Pair<Integer, Integer> value) {
                 if ((Knight.this.index.getKey() + 1 == value.getKey() && Knight.this.index.getValue() - 2 == value.getValue()) ||
@@ -72,5 +73,10 @@ public class Knight extends ChessPiece {
     @Override
     public Color getColor() {
         return this.color;
+    }
+
+    @Override
+    public int getType() {
+        return this.type;
     }
 }

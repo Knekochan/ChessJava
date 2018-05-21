@@ -12,10 +12,11 @@ public class Queen extends ChessPiece {
     private Color color;
     private final int type = 5;
 
-    public Queen(Color color) {
+    public Queen(Color color, Pair<Integer,Integer> index) {
         super(color == Color.WHITE ? new File("C:\\Users\\User\\Documents\\IntelliJ IDEA\\Chess\\src\\sample\\PieceImages\\QueenWhite.png").toURI().toString() :
                 new File("C:\\Users\\User\\Documents\\IntelliJ IDEA\\Chess\\src\\sample\\PieceImages\\QueenBlack.png").toURI().toString());
         this.color = color;
+        this.index = index;
         this.moveStrategy = new MoveStrategy() {
             private boolean queenDiagonalDifferent(Pair<Integer, Integer> from, Pair<Integer, Integer> to) {
                 for (int i = from.getKey(); i < to.getKey(); i++) {
@@ -122,5 +123,10 @@ public class Queen extends ChessPiece {
     @Override
     public Color getColor() {
         return this.color;
+    }
+
+    @Override
+    public int getType() {
+        return this.type;
     }
 }

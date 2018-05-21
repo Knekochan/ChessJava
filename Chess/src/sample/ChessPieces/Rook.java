@@ -13,10 +13,11 @@ public class Rook extends ChessPiece {
     private Color color;
     private final int type = 2;
 
-    public Rook(Color color) {
+    public Rook(Color color, Pair<Integer,Integer> index) {
         super(color == Color.WHITE ? new File("C:\\Users\\User\\Documents\\IntelliJ IDEA\\Chess\\src\\sample\\PieceImages\\RookWhite.png").toURI().toString() :
                                      new File("C:\\Users\\User\\Documents\\IntelliJ IDEA\\Chess\\src\\sample\\PieceImages\\RookBlack.png").toURI().toString());
         this.color = color;
+        this.index = index;
         this.moveStrategy = new MoveStrategy() {
             @Override
             public boolean CanMoveTo(Pair<Integer, Integer> value) {
@@ -94,6 +95,11 @@ public class Rook extends ChessPiece {
     @Override
     public Color getColor() {
         return this.color;
+    }
+
+    @Override
+    public int getType() {
+        return this.type;
     }
 
     @Override

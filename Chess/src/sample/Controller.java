@@ -10,26 +10,36 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Pair;
 import sample.ChessPieces.Bishop;
 
+import java.util.ArrayList;
+
 public class Controller {
     @FXML
     private Canvas canvas;
     private GraphicsContext gc;
 
+    private ArrayList<Pair<Integer, Integer>> indexs;
+
     @FXML
     public void initialize() {
         this.gc = this.canvas.getGraphicsContext2D();
-        //this.canvas.addEventFilter(MouseEvent.MOUSE_PRESSED,new MouseEvent());
+
+        this.indexs = new ArrayList<>();
+
         this.draw();
 
         this.canvas.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                /*
-                Pair<Integer,Integer> selectedPiece = ChessBoard.getInstance().getChessPieceAt((int)event.getX(),(int)event.getY());
-                Pair<Integer,Integer> movePlace = ChessBoard.getInstance().getChessPieceAt((int)event.getX(),(int)event.getY());
+                Controller.this.indexs.add(ChessBoard.getInstance().getChessPieceAt((int) event.getX(), (int) event.getY()));
 
-                ChessBoard.getInstance().movePiece(ChessBoard.getInstance().getFieldValue(selectedPiece),movePlace);
-                */
+                if (Controller.this.indexs.size() > 1) {
+                    if (ChessBoard.getInstance().getFieldValue(Controller.this.indexs.get(0)) != null) {
+                        ChessBoard.getInstance().movePiece(ChessBoard.getInstance().getFieldValue(Controller.this.indexs.get(0)), Controller.this.indexs.get(1));
+                    }
+                    Controller.this.indexs.clear();
+                }
+
+                Controller.this.draw();
             }
         });
 

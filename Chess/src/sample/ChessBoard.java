@@ -26,30 +26,30 @@ public class ChessBoard {
         File f = new File("C:\\Users\\User\\Documents\\IntelliJ IDEA\\Chess\\src\\sample\\PieceImages\\ChessAll.PNG");
         this.background = new Image(f.toURI().toString());
 
-        //fekete
-        this.board[0][0] = new Rook(Color.BLACK); //bástya
-        this.board[0][1] = new Knight(Color.BLACK); //huszár
-        this.board[0][2] = new Bishop(Color.BLACK); //futó
-        this.board[0][3] = new Queen(Color.BLACK); //királynő
-        this.board[0][4] = new King(Color.BLACK); //király
-        this.board[0][5] = new Bishop(Color.BLACK); //futó
-        this.board[0][6] = new Knight(Color.BLACK); //huszár
-        this.board[0][7] = new Rook(Color.BLACK); //bástya
+        //fehér
+        this.board[0][0] = new Rook(Color.WHITE, new Pair<>(0,0)); //bástya
+        this.board[0][1] = new Knight(Color.WHITE, new Pair<>(0,1)); //huszár
+        this.board[0][2] = new Bishop(Color.WHITE, new Pair<>(0,2)); //futó
+        this.board[0][3] = new Queen(Color.WHITE, new Pair<>(0,3)); //királynő
+        this.board[0][4] = new King(Color.WHITE, new Pair<>(0,4)); //király
+        this.board[0][5] = new Bishop(Color.WHITE, new Pair<>(0,5)); //futó
+        this.board[0][6] = new Knight(Color.WHITE, new Pair<>(0,6)); //huszár
+        this.board[0][7] = new Rook(Color.WHITE,new Pair<>(0,7)); //bástya
 
         //fehér
-        this.board[7][0] = new Rook(Color.WHITE); //bástya
-        this.board[7][1] = new Knight(Color.WHITE); //huszár
-        this.board[7][2] = new Bishop(Color.WHITE); //futó
-        this.board[7][3] = new Queen(Color.WHITE); //királynő
-        this.board[7][4] = new King(Color.WHITE); //király
-        this.board[7][5] = new Bishop(Color.WHITE); //futó
-        this.board[7][6] = new Knight(Color.WHITE); //huszár
-        this.board[7][7] = new Rook(Color.WHITE); //bástya
+        this.board[7][0] = new Rook(Color.BLACK, new Pair<>(7,0)); //bástya
+        this.board[7][1] = new Knight(Color.BLACK, new Pair<>(7,1)); //huszár
+        this.board[7][2] = new Bishop(Color.BLACK,new Pair<>(7,2)); //futó
+        this.board[7][3] = new Queen(Color.BLACK, new Pair<>(7,3)); //királynő
+        this.board[7][4] = new King(Color.BLACK,new Pair<>(7,4)); //király
+        this.board[7][5] = new Bishop(Color.BLACK,new Pair<>(7,5)); //futó
+        this.board[7][6] = new Knight(Color.BLACK, new Pair<>(7,6)); //huszár
+        this.board[7][7] = new Rook(Color.BLACK, new Pair<>(7,7)); //bástya
 
         //parasztok
         for (int i = 0; i < 8; i++) {
-            this.board[1][i] = new Pawn(Color.BLACK);
-            this.board[6][i] = new Pawn(Color.WHITE);
+            this.board[1][i] = new Pawn(Color.WHITE, new Pair<>(1,i));
+            this.board[6][i] = new Pawn(Color.BLACK, new Pair<>(6,i));
         }
 
         //többi mező
@@ -89,9 +89,15 @@ public class ChessBoard {
         this.deadBlackPiece.add(value);
     }
 
+    //bábut cserél
+    //a tábla adott helyén lévő értéket átírja
+    public void changeFieldValue(Pair<Integer, Integer> piece, ChessPiece i) {
+        board[piece.getKey()][piece.getValue()] = i;
+    }
+
     //bábuk léptetése
     public void movePiece(ChessPiece piece, Pair<Integer, Integer> value) {
-        if (piece.CanMoveTo(piece.getIndex())) {
+        if (piece.CanMoveTo(value)) {
             Pair<Integer, Integer> help;
             help = piece.getIndex();
             piece.setIndex(value);
@@ -141,12 +147,6 @@ public class ChessBoard {
         return board[value.getKey()][value.getValue()];
     }
 
-    //bábut cserél
-    //a tábla adott helyén lévő értéket átírja
-    public void changeFieldValue(Pair<Integer, Integer> piece, ChessPiece i) {
-        board[piece.getKey()][piece.getValue()] = i;
-    }
-
     //sakk bábunak az indexét adja vissza (amire az egérrel rá kattintottunk)
     public Pair<Integer,Integer> getChessPieceAt(int x, int y) {
         int i;
@@ -159,6 +159,7 @@ public class ChessBoard {
              case 4: i = 4; break;
              case 5: i = 5; break;
              case 6: i = 6; break;
+             case 7: i = 7; break;
              default: i = 0; break;
          }
 
@@ -170,6 +171,7 @@ public class ChessBoard {
             case 4: j = 4; break;
             case 5: j = 5; break;
             case 6: j = 6; break;
+            case 7: j = 7; break;
             default: j = 0; break;
         }
 

@@ -12,10 +12,11 @@ public class Bishop extends ChessPiece {
     private Color color;
     private final int type = 4;
 
-    public Bishop(Color color) {
+    public Bishop(Color color, Pair<Integer,Integer> index) {
         super(color == Color.WHITE ? new File("C:\\Users\\User\\Documents\\IntelliJ IDEA\\Chess\\src\\sample\\PieceImages\\BishopWhite.png").toURI().toString() :
                 new File("C:\\Users\\User\\Documents\\IntelliJ IDEA\\Chess\\src\\sample\\PieceImages\\BishopBlack.png").toURI().toString());
         this.color = color;
+        this.index = index;
         this.moveStrategy = new MoveStrategy() {
             private boolean moveSame(Pair<Integer, Integer> from, Pair<Integer, Integer> to) {
                 for (int i = from.getKey(); i < to.getKey(); i++) {
@@ -100,6 +101,11 @@ public class Bishop extends ChessPiece {
     @Override
     public Color getColor() {
         return this.color;
+    }
+
+    @Override
+    public int getType() {
+        return this.type;
     }
 }
 
