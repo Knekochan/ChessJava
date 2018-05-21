@@ -4,6 +4,8 @@ import javafx.scene.image.Image;
 import javafx.util.Pair;
 import sample.ChessBoard;
 
+import java.io.File;
+
 //bástya
 public class Rook extends ChessPiece {
     //Pair<oszlop,sor>
@@ -12,47 +14,68 @@ public class Rook extends ChessPiece {
     private final int type = 2;
 
     public Rook(Color color) {
-        super(color == Color.WHITE ? "vmi" : "vmi");
+        super(color == Color.WHITE ? new File("C:\\Users\\User\\Documents\\IntelliJ IDEA\\Chess\\src\\sample\\PieceImages\\RookWhite.png").toURI().toString() :
+                                     new File("C:\\Users\\User\\Documents\\IntelliJ IDEA\\Chess\\src\\sample\\PieceImages\\RookBlack.png").toURI().toString());
         this.color = color;
         this.moveStrategy = new MoveStrategy() {
             @Override
             public boolean CanMoveTo(Pair<Integer, Integer> value) {
-                if ((Math.abs(Rook.this.index.getKey() - value.getKey()) <= 7 || Math.abs(Rook.this.index.getValue() - value.getValue()) <= 7) &&
-                        ChessBoard.getInstance().getFieldValue(value) == null) {
-                    if (Rook.this.index.getKey() == value.getKey()) {
-                        if (Rook.this.index.getValue() < value.getValue()) {
-                            for (int i = Rook.this.index.getValue() + 1; i < value.getValue(); i++) {
-                                if (ChessBoard.getInstance().getFieldValue(new Pair<>(Rook.this.index.getKey(), i)) != null) {
-                                    return false;
-                                }
+                boolean help = true;
+
+                //lépés szám jó e
+                if ((Math.abs(Rook.this.index.getKey() - value.getKey()) > 7 || Math.abs(Rook.this.index.getValue() - value.getValue()) > 7)) {
+                    return false;
+                }
+
+                //szabad e az út
+                if (Rook.this.index.getKey() == value.getKey()) {
+                    if (Rook.this.index.getValue() < value.getValue()) {
+                        for (int i = Rook.this.index.getValue() + 1; i < value.getValue(); i++) {
+                            if (ChessBoard.getInstance().getFieldValue(new Pair<>(Rook.this.index.getKey(), i)) != null) {
+                                help = false;
                             }
-                            return true;
-                        } else {
-                            for (int i = value.getValue(); i < Rook.this.index.getValue(); i++) {
-                                if (ChessBoard.getInstance().getFieldValue(new Pair<>(Rook.this.index.getKey(), i)) != null) {
-                                    return false;
-                                }
-                            }
-                            return true;
                         }
-                    } else if (Rook.this.index.getValue() == value.getValue()) {
-                        if (Rook.this.index.getKey() < value.getKey()) {
-                            for (int i = Rook.this.index.getKey() + 1; i < value.getKey(); i++) {
-                                if (ChessBoard.getInstance().getFieldValue(new Pair<>(i, Rook.this.index.getValue())) != null) {
-                                    return false;
-                                }
+                    } else {
+                        for (int i = value.getValue(); i < Rook.this.index.getValue(); i++) {
+                            if (ChessBoard.getInstance().getFieldValue(new Pair<>(Rook.this.index.getKey(), i)) != null) {
+                                help = false;
                             }
-                            return true;
-                        } else {
-                            for (int i = value.getKey(); i < Rook.this.index.getKey(); i++) {
-                                if (ChessBoard.getInstance().getFieldValue(new Pair<>(i, Rook.this.index.getValue())) != null) {
-                                    return false;
-                                }
+                        }
+                    }
+                } else if (Rook.this.index.getValue() == value.getValue()) {
+                    if (Rook.this.index.getKey() < value.getKey()) {
+                        for (int i = Rook.this.index.getKey() + 1; i < value.getKey(); i++) {
+                            if (ChessBoard.getInstance().getFieldValue(new Pair<>(i, Rook.this.index.getValue())) != null) {
+                                help = false;
                             }
-                            return true;
+                        }
+                    } else {
+                        for (int i = value.getKey(); i < Rook.this.index.getKey(); i++) {
+                            if (ChessBoard.getInstance().getFieldValue(new Pair<>(i, Rook.this.index.getValue())) != null) {
+                                help = false;
+                            }
                         }
                     }
                 }
+
+                //ha ütés akkor mi lesz
+                if (help) {
+                    //ha ahova lépni akarunk ott bábu van akkor az ütésnek minősül így be kell tenni az ott álló bábut a halott bábuk közé, egyébként meg csak vissza térünk true-val mivel csak át kell rakni az új helyre
+                    if (ChessBoard.getInstance().getFieldValue(value) != null && ChessBoard.getInstance().getFieldValue(value) instanceof King) {
+                        if (ChessBoard.getInstance().getFieldValue(value).getColor() != Rook.this.color) {
+                            if (Rook.this.color == Color.WHITE) {
+                                ChessBoard.getInstance().getDeadBlackPiece().add(ChessBoard.getInstance().getFieldValue(value));
+                            } else {
+                                ChessBoard.getInstance().getDeadWhitePiece().add(ChessBoard.getInstance().getFieldValue(value));
+                            }
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+
                 return false;
             }
         };
@@ -71,11 +94,6 @@ public class Rook extends ChessPiece {
     @Override
     public Color getColor() {
         return this.color;
-    }
-
-    @Override
-    public void Hit(Pair<Integer, Integer> value) {
-
     }
 
     @Override

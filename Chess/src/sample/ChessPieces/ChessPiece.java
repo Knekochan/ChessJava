@@ -13,9 +13,9 @@ public abstract class ChessPiece {
         this.image = new Image(path);
     }
 
-    public void draw(GraphicsContext gc) {
+    public void draw(GraphicsContext gc, int x, int y) {
         // a 0-ák helyére a bábu pozíciója kerül
-        gc.drawImage(this.image, 0, 0);
+        gc.drawImage(this.image, x, y);
     }
 
     //az index jelz, hogy hol vannak éppen a bábuk a pályán
@@ -28,6 +28,5 @@ public abstract class ChessPiece {
     public boolean CanMoveTo(Pair<Integer,Integer> value) {
         return this.moveStrategy.CanMoveTo(value);
     }
-    public abstract void Hit(Pair<Integer,Integer> value);
     public void Change(ChessPiece value) {};
 }

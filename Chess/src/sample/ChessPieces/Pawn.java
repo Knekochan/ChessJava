@@ -3,6 +3,8 @@ package sample.ChessPieces;
 import javafx.util.Pair;
 import sample.ChessBoard;
 
+import java.io.File;
+
 //gyalog
 public class Pawn extends ChessPiece {
     //Pair<oszlop,sor>
@@ -12,28 +14,65 @@ public class Pawn extends ChessPiece {
 
     public Pawn(Color color) {
         // paraméterben a kép elérését kell megadni
-        super(color == Color.WHITE ? "fehér_kép" : "fekete_kép");
+        super(color == Color.WHITE ? new File("C:\\Users\\User\\Documents\\IntelliJ IDEA\\Chess\\src\\sample\\PieceImages\\PawnWhite.png").toURI().toString() :
+                new File("C:\\Users\\User\\Documents\\IntelliJ IDEA\\Chess\\src\\sample\\PieceImages\\PawnBlack.png").toURI().toString());
         this.color = color;
         this.moveStrategy = new MoveStrategy() {
+
+            private boolean pawnHit(Pair<Integer, Integer> value) {
+                //fehér paraszt
+                if (ChessBoard.getInstance().getFieldValue(value).getColor() != Pawn.this.color) {
+                    if (Pawn.this.color == Color.WHITE) {
+                        if (((ChessBoard.getInstance().getFieldValue(value) instanceof King) && (value.getValue() == Pawn.this.index.getValue() - 1) && (value.getValue() != 0)) &&         //királyt nem ütjük le és mindenképp a paraszt elötti sorban kell lennie és az utolsó sorban már nem üthet
+                                (((Pawn.this.index.getKey() == 0) && (value.getKey() == Pawn.this.index.getKey() + 1)) ||                  //ha a paraszt a 0. oszlopban van
+                                        ((Pawn.this.index.getKey() == 7) && (value.getKey() == Pawn.this.index.getKey() - 1)) ||                  //ha a paraszt a 7.oszlopban van
+                                        ((value.getKey() == Pawn.this.index.getKey() + 1) || (value.getKey() == Pawn.this.index.getKey() - 1)))) {    //többi
+
+                            //megnézi milyen bábu-t akarunk leütni és azt beteszi a halott bábuk közé, és mivel fehérrel ütünk ezért a feketék közé
+                            if (ChessBoard.getInstance().getFieldValue(value) != null) {
+                                ChessBoard.getInstance().setDeadBlackPiece(ChessBoard.getInstance().getFieldValue(value));
+                                return true;
+                            }
+                        }
+                    }
+                    //fekete paraszt
+                    else {
+                        if (((ChessBoard.getInstance().getFieldValue(value) instanceof King) && (value.getValue() == Pawn.this.index.getValue() + 1) && (value.getValue() != 7)) &&         //királyt nem ütjük le és mindenképp a paraszt elötti sorban kell lennie és az utolsó sorban már nem üthet
+                                (((Pawn.this.index.getKey() == 0) && (value.getKey() == Pawn.this.index.getKey() + 1)) ||                   //ha a paraszt a 0. oszlopban van
+                                        ((Pawn.this.index.getKey() == 7) && (value.getKey() == Pawn.this.index.getKey() - 1)) ||                   //ha a paraszt a 7.oszlopban van
+                                        ((value.getKey() == Pawn.this.index.getKey() + 1) || (value.getKey() == Pawn.this.index.getKey() - 1)))) {     //többi
+
+                            //megnézi milyen bábu-t akarunk leütni és azt beteszi a halott bábuk közé, és mivel feketével ütünk ezért a fehérek közé
+                            if (ChessBoard.getInstance().getFieldValue(value) != null) {
+                                ChessBoard.getInstance().setDeadWhitePiece(ChessBoard.getInstance().getFieldValue(value));
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
+            }
+
             @Override
             public boolean CanMoveTo(Pair<Integer, Integer> value) {
-                Pair<Integer, Integer> help;
-                if (Pawn.this.color == Color.WHITE &&
-                        Pawn.this.index.getValue() > value.getValue() &&
-                        ChessBoard.getInstance().getFieldValue(value) == null &&
-                        ((Pawn.this.index.getValue() == 6 && Math.abs(Pawn.this.index.getValue() - value.getValue()) <= 2) ||
-                          Math.abs(Pawn.this.index.getValue() - value.getValue()) <= 1)) {
-                    return true;
-                }
-                else if (Pawn.this.color == Color.BLACK &&
-                        Pawn.this.index.getValue() < value.getValue() &&
-                        ChessBoard.getInstance().getFieldValue(value) == null &&
-                        ((Pawn.this.index.getValue() == 1 && Math.abs(Pawn.this.index.getValue() - value.getValue()) <= 2) ||
-                                Math.abs(Pawn.this.index.getValue() - value.getValue()) <= 1)){
-                    return true;
+                //lépés vagy ütés
+                if (ChessBoard.getInstance().getFieldValue(value) == null) {
+                    if (Pawn.this.color == Color.WHITE &&
+                            Pawn.this.index.getValue() > value.getValue() &&
+                            ((Pawn.this.index.getValue() == 6 && Math.abs(Pawn.this.index.getValue() - value.getValue()) <= 2) ||
+                                    Math.abs(Pawn.this.index.getValue() - value.getValue()) <= 1)) {
+                        return true;
+                    } else if (Pawn.this.color == Color.BLACK &&
+                            Pawn.this.index.getValue() < value.getValue() &&
+                            ((Pawn.this.index.getValue() == 1 && Math.abs(Pawn.this.index.getValue() - value.getValue()) <= 2) ||
+                                    Math.abs(Pawn.this.index.getValue() - value.getValue()) <= 1)) {
+                        return true;
+                    }
+                } else {
+                    return this.pawnHit(value);
                 }
 
-                return  false;
+                return false;
             }
         };
     }
@@ -51,49 +90,6 @@ public class Pawn extends ChessPiece {
     @Override
     public Color getColor() {
         return this.color;
-    }
-
-    private void hitHelp(Pair<Integer, Integer> help) {
-        ChessBoard.getInstance().changeFieldValue(help, null);
-        ChessBoard.getInstance().changeFieldValue(this.index, this);
-    }
-
-    //azt a helyet kéri be ahol leakarja ütni a bábut
-    @Override
-    public void Hit(Pair<Integer, Integer> i) {
-        Pair<Integer, Integer> help;
-        //fehér paraszt
-        if (this.color == Color.WHITE) {
-            if (((ChessBoard.getInstance().getFieldValue(i) instanceof King) && (i.getValue() == this.index.getValue() - 1) && (i.getValue() != 0)) &&         //királyt nem ütjük le és mindenképp a paraszt elötti sorban kell lennie és az utolsó sorban már nem üthet
-                    (((this.index.getKey() == 0) && (i.getKey() == this.index.getKey() + 1)) ||                  //ha a paraszt a 0. oszlopban van
-                            ((this.index.getKey() == 7) && (i.getKey() == this.index.getKey() - 1)) ||                  //ha a paraszt a 7.oszlopban van
-                            ((i.getKey() == this.index.getKey() + 1) || (i.getKey() == this.index.getKey() - 1)))) {    //többi
-
-                //megnézi milyen bábu-t akarunk leütni és azt beteszi a halott bábuk közé, és mivel fehérrel ütünk ezért a feketék közé
-                if (ChessBoard.getInstance().findPieceIndex(i) != null) {
-                    ChessBoard.getInstance().setDeadBlackPiece(ChessBoard.getInstance().findPieceIndex(i));
-                    help = this.index;
-                    this.index = i;
-                    this.hitHelp(help);
-                }
-            }
-        }
-        //fekete paraszt
-        else {
-            if (((ChessBoard.getInstance().getFieldValue(i) instanceof King) && (i.getValue() == this.index.getValue() + 1) && (i.getValue() != 7)) &&         //királyt nem ütjük le és mindenképp a paraszt elötti sorban kell lennie és az utolsó sorban már nem üthet
-                    (((this.index.getKey() == 0) && (i.getKey() == this.index.getKey() + 1)) ||                   //ha a paraszt a 0. oszlopban van
-                            ((this.index.getKey() == 7) && (i.getKey() == this.index.getKey() - 1)) ||                   //ha a paraszt a 7.oszlopban van
-                            ((i.getKey() == this.index.getKey() + 1) || (i.getKey() == this.index.getKey() - 1)))) {     //többi
-
-                //megnézi milyen bábu-t akarunk leütni és azt beteszi a halott bábuk közé, és mivel feketével ütünk ezért a fehérek közé
-                if (ChessBoard.getInstance().findPieceIndex(i) != null) {
-                    ChessBoard.getInstance().setDeadWhitePiece(ChessBoard.getInstance().findPieceIndex(i));
-                    help = this.index;
-                    this.index = i;
-                    this.hitHelp(help);
-                }
-            }
-        }
     }
 
     @Override

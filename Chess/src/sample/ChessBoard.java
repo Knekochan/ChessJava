@@ -1,13 +1,18 @@
 package sample;
+
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.util.Pair;
 import sample.ChessPieces.*;
 
+import java.io.File;
 import java.util.*;
 
 //tábla
 public class ChessBoard {
     private static ChessBoard chessBoard = null;
+
+    private Image background;
 
     private ChessPiece[][] board;
     private ArrayList<ChessPiece> deadWhitePiece;
@@ -17,6 +22,9 @@ public class ChessBoard {
         this.board = new ChessPiece[8][8];
         this.deadWhitePiece = new ArrayList<ChessPiece>();
         this.deadBlackPiece = new ArrayList<ChessPiece>();
+
+        File f = new File("C:\\Users\\User\\Documents\\IntelliJ IDEA\\Chess\\src\\sample\\PieceImages\\ChessAll.PNG");
+        this.background = new Image(f.toURI().toString());
 
         //fekete
         this.board[0][0] = new Rook(Color.BLACK); //bástya
@@ -54,8 +62,7 @@ public class ChessBoard {
     }
 
     //Instance = példány
-    public static ChessBoard getInstance()
-    {
+    public static ChessBoard getInstance() {
         if (chessBoard == null) {
             chessBoard = new ChessBoard();
         }
@@ -83,7 +90,7 @@ public class ChessBoard {
     }
 
     //bábuk léptetése
-    public void movePiece(ChessPiece piece, Pair<Integer,Integer> value) {
+    public void movePiece(ChessPiece piece, Pair<Integer, Integer> value) {
         if (piece.CanMoveTo(piece.getIndex())) {
             Pair<Integer, Integer> help;
             help = piece.getIndex();
@@ -94,28 +101,31 @@ public class ChessBoard {
     }
 
     public void draw(GraphicsContext gc) {
-        for(int i = 0; i < 8; i++) {
-            for(int j = 0; j < 8; j++) {
-                this.board[i][j].draw(gc);
+        gc.drawImage(this.background, 0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (this.board[i][j] != null) {
+                    //this.board[i][j].draw(gc,this.board[i][j].getIndex().getKey() + (i * 61), this.board[i][j].getIndex().getValue() + (j * 61));
+                    this.board[i][j].draw(gc, i * 71, j * 71);
+                }
             }
         }
     }
 
     //a halott bábuk listájából törli a vissza került bábut
     //akkor használjuk amikor az egyik paraszt a pálya tulsó végére ér és lehetőség van a bábu cserére
-    public void removeDeadPiece(Color color, ChessPiece value)
-    {
+    public void removeDeadPiece(Color color, ChessPiece value) {
         int i = 0;
         if (color == color.WHITE) {
-            while(deadWhitePiece.get(i) != value &&  i < deadWhitePiece.size()) {
+            while (deadWhitePiece.get(i) != value && i < deadWhitePiece.size()) {
                 i++;
             }
             if (i < deadWhitePiece.size()) {
                 deadWhitePiece.remove(i);
             }
-        }
-        else {
-            while(deadBlackPiece.get(i) != value &&  i < deadBlackPiece.size()) {
+        } else {
+            while (deadBlackPiece.get(i) != value && i < deadBlackPiece.size()) {
                 i++;
             }
             if (i < deadBlackPiece.size()) {
@@ -127,27 +137,43 @@ public class ChessBoard {
 
     //vissza adja az adott táblahelyen található értéket
     //vagyis megmondja, hogy a tábla adott helyén milyen bábu van
-    public ChessPiece getFieldValue(Pair<Integer,Integer> value) {
+    public ChessPiece getFieldValue(Pair<Integer, Integer> value) {
         return board[value.getKey()][value.getValue()];
     }
 
     //bábut cserél
     //a tábla adott helyén lévő értéket átírja
-    public void changeFieldValue(Pair<Integer,Integer> piece, ChessPiece i){
+    public void changeFieldValue(Pair<Integer, Integer> piece, ChessPiece i) {
         board[piece.getKey()][piece.getValue()] = i;
     }
 
-    //ezt egyelőre nem használom
+    //sakk bábunak az indexét adja vissza (amire az egérrel rá kattintottunk)
+    public Pair<Integer,Integer> getChessPieceAt(int x, int y) {
+        int i;
+        int j;
+         switch (x / 70) {
+             case 0: i = 0; break;
+             case 1: i = 1; break;
+             case 2: i = 2; break;
+             case 3: i = 3; break;
+             case 4: i = 4; break;
+             case 5: i = 5; break;
+             case 6: i = 6; break;
+             default: i = 0; break;
+         }
 
-    public ChessPiece findPieceIndex(Pair<Integer,Integer> value) {
-        for (int i = 0; i < board[0].length; i++) {
-            for (int j = 0; j < board[1].length; j++) {
-                if (i == value.getKey() && j == value.getValue()) {
-                    return board[i][j];
-                }
-            }
+        switch (y / 70) {
+            case 0: j = 0; break;
+            case 1: j = 1; break;
+            case 2: j = 2; break;
+            case 3: j = 3; break;
+            case 4: j = 4; break;
+            case 5: j = 5; break;
+            case 6: j = 6; break;
+            default: j = 0; break;
         }
-        return null;
+
+        return new Pair<>(i,j);
     }
 
 }
