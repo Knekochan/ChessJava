@@ -24,9 +24,10 @@ public class Rook extends ChessPiece {
                 boolean help = true;
 
                 //lépés szám jó e
-                if ((Math.abs(Rook.this.index.getKey() - value.getKey()) > 7 || Math.abs(Rook.this.index.getValue() - value.getValue()) > 7)) {
+                if (Math.abs(Rook.this.index.getKey() - value.getKey()) == Math.abs(Rook.this.index.getValue() - value.getValue())) {
                     return false;
                 }
+
 
                 //szabad e az út
                 if (Rook.this.index.getKey() == value.getKey()) {
@@ -37,7 +38,7 @@ public class Rook extends ChessPiece {
                             }
                         }
                     } else {
-                        for (int i = value.getValue(); i < Rook.this.index.getValue(); i++) {
+                        for (int i = value.getValue() + 1; i < Rook.this.index.getValue(); i++) {
                             if (ChessBoard.getInstance().getFieldValue(new Pair<>(Rook.this.index.getKey(), i)) != null) {
                                 help = false;
                             }
@@ -51,7 +52,7 @@ public class Rook extends ChessPiece {
                             }
                         }
                     } else {
-                        for (int i = value.getKey(); i < Rook.this.index.getKey(); i++) {
+                        for (int i = value.getKey() + 1; i < Rook.this.index.getKey(); i++) {
                             if (ChessBoard.getInstance().getFieldValue(new Pair<>(i, Rook.this.index.getValue())) != null) {
                                 help = false;
                             }
@@ -62,7 +63,8 @@ public class Rook extends ChessPiece {
                 //ha ütés akkor mi lesz
                 if (help) {
                     //ha ahova lépni akarunk ott bábu van akkor az ütésnek minősül így be kell tenni az ott álló bábut a halott bábuk közé, egyébként meg csak vissza térünk true-val mivel csak át kell rakni az új helyre
-                    if (ChessBoard.getInstance().getFieldValue(value) != null && ChessBoard.getInstance().getFieldValue(value) instanceof King) {
+                    // && ChessBoard.getInstance().getFieldValue(value) instanceof King
+                    if (ChessBoard.getInstance().getFieldValue(value) != null) {
                         if (ChessBoard.getInstance().getFieldValue(value).getColor() != Rook.this.color) {
                             if (Rook.this.color == Color.WHITE) {
                                 ChessBoard.getInstance().getDeadBlackPiece().add(ChessBoard.getInstance().getFieldValue(value));

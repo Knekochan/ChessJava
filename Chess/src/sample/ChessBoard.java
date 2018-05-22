@@ -3,6 +3,7 @@ package sample;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.util.Pair;
+import jdk.nashorn.api.tree.WhileLoopTree;
 import sample.ChessPieces.*;
 
 import java.io.File;
@@ -18,10 +19,14 @@ public class ChessBoard {
     private ArrayList<ChessPiece> deadWhitePiece;
     private ArrayList<ChessPiece> deadBlackPiece;
 
+    private Color actColor;
+
     private ChessBoard() {
         this.board = new ChessPiece[8][8];
         this.deadWhitePiece = new ArrayList<ChessPiece>();
         this.deadBlackPiece = new ArrayList<ChessPiece>();
+
+        this.actColor = Color.WHITE;
 
         File f = new File("C:\\Users\\User\\Documents\\IntelliJ IDEA\\Chess\\src\\sample\\PieceImages\\ChessAll.PNG");
         this.background = new Image(f.toURI().toString());
@@ -97,12 +102,19 @@ public class ChessBoard {
 
     //bábuk léptetése
     public void movePiece(ChessPiece piece, Pair<Integer, Integer> value) {
-        if (piece.CanMoveTo(value)) {
+        if (piece.getColor() == actColor && piece.CanMoveTo(value)) {
             Pair<Integer, Integer> help;
             help = piece.getIndex();
             piece.setIndex(value);
             this.changeFieldValue(help, null);
             this.changeFieldValue(piece.getIndex(), piece);
+
+            if (actColor == Color.WHITE) {
+                actColor = Color.BLACK;
+            }
+            else {
+                actColor = Color.WHITE;
+            }
         }
     }
 

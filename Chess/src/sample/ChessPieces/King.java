@@ -36,9 +36,9 @@ public class King extends ChessPiece {
             public boolean CanMoveTo(Pair<Integer, Integer> value) {
                 boolean help = false;
 
-                if (this.kingNextTo(value) && ChessBoard.getInstance().getFieldValue(value) instanceof King) {
-                    help = true;
-                }
+                // && ChessBoard.getInstance().getFieldValue(value).getType() != 6
+
+                help = this.kingNextTo(value);
 
                 if (help) {
                     //ha ahova lépni akarunk ott bábu van akkor az ütésnek minősül így be kell tenni az ott álló bábut a halott bábuk közé, egyébként meg csak vissza térünk true-val mivel csak át kell rakni az új helyre
