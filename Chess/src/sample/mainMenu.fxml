@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<GridPane hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.mainMenu">
+    <columnConstraints>
+        <ColumnConstraints />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints />
+    </rowConstraints>
+    <children>
+        <Pane prefHeight="200.0" prefWidth="200.0">
+            <children>
+                <Canvas id="canvas" fx:id="canvas" height="560.0" width="560.0" />
+            <Button id="btnPlay" fx:id="btnPlay" alignment="CENTER" layoutX="250.0" layoutY="200.0" mnemonicParsing="false" onAction="#playClick" text="Play" textAlignment="CENTER">
+               <font>
+                  <Font size="24.0" />
+               </font></Button>
+            </children>
+        </Pane>
+    </children>
+</GridPane>

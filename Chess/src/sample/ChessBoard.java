@@ -26,7 +26,7 @@ public class ChessBoard {
         this.deadWhitePiece = new ArrayList<ChessPiece>();
         this.deadBlackPiece = new ArrayList<ChessPiece>();
 
-        this.actColor = Color.WHITE;
+        this.actColor = Color.BLACK;
 
         File f = new File("C:\\Users\\User\\Documents\\IntelliJ IDEA\\Chess\\src\\sample\\PieceImages\\ChessAll.PNG");
         this.background = new Image(f.toURI().toString());
@@ -101,7 +101,7 @@ public class ChessBoard {
     }
 
     //bábuk léptetése
-    public void movePiece(ChessPiece piece, Pair<Integer, Integer> value) {
+    public boolean movePiece(ChessPiece piece, Pair<Integer, Integer> value) {
         if (piece.getColor() == actColor && piece.CanMoveTo(value)) {
             Pair<Integer, Integer> help;
             help = piece.getIndex();
@@ -115,7 +115,9 @@ public class ChessBoard {
             else {
                 actColor = Color.WHITE;
             }
+            return true;
         }
+        return false;
     }
 
     public void draw(GraphicsContext gc) {

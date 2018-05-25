@@ -16,7 +16,7 @@
    <children>
       <Pane prefHeight="200.0" prefWidth="200.0">
          <children>
-            <Canvas id="canvas" fx:id="canvas" height="560.0" width="560.0" />
+            <Canvas id="canvas" fx:id="canvas" height="560.0" onMousePressed="#canvasClick" width="560.0" />
          </children>
       </Pane>
    </children>

@@ -8,41 +8,55 @@ import javafx.scene.paint.Color;
 
 import javafx.scene.input.MouseEvent;
 import javafx.util.Pair;
-import sample.ChessPieces.Bishop;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Controller {
     @FXML
     private Canvas canvas;
     private GraphicsContext gc;
 
-    private ArrayList<Pair<Integer, Integer>> indexs;
+    private ArrayList<Pair<Integer, Integer>> indexes;
 
     @FXML
     public void initialize() {
         this.gc = this.canvas.getGraphicsContext2D();
 
-        this.indexs = new ArrayList<>();
+        this.indexes = new ArrayList<>();
+        ArrayList<Pair<String, Integer>> scores = Database.getInstance().getScores();
+        for(Pair<String, Integer> p : scores) {
+            System.out.println(p.getKey() + " " + p.getValue());
+        }
+
+        this.runTests();
 
         this.draw();
 
-        this.canvas.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                Controller.this.indexs.add(ChessBoard.getInstance().getChessPieceAt((int) event.getX(), (int) event.getY()));
+    }
 
-                if (Controller.this.indexs.size() > 1) {
-                    if (ChessBoard.getInstance().getFieldValue(Controller.this.indexs.get(0)) != null) {
-                        ChessBoard.getInstance().movePiece(ChessBoard.getInstance().getFieldValue(Controller.this.indexs.get(0)), Controller.this.indexs.get(1));
-                    }
-                    Controller.this.indexs.clear();
-                }
+    private void runTests() {
+        Result result = JUnitCore.runClasses(ChessTest.class);
+        for (Failure failure : result.getFailures()) {
+            System.out.println(failure.toString());
+        }
+    }
 
-                Controller.this.draw();
+    public void canvasClick(MouseEvent event) {
+        System.out.println(event.getX() + " " + event.getY());
+        this.indexes.add(ChessBoard.getInstance().getChessPieceAt((int) event.getX(), (int) event.getY()));
+
+        if (this.indexes.size() > 1) {
+            if (ChessBoard.getInstance().getFieldValue(this.indexes.get(0)) != null) {
+                ChessBoard.getInstance().movePiece(ChessBoard.getInstance().getFieldValue(this.indexes.get(0)), this.indexes.get(1));
             }
-        });
+            this.indexes.clear();
+        }
 
+        this.draw();
     }
 
     public void draw() {
@@ -56,6 +70,4 @@ public class Controller {
         // rajzolások
         ChessBoard.getInstance().draw(gc);
     }
-
-
 }
